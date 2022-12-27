@@ -4,19 +4,37 @@ class Game {
     currentMaden = 0
     material = 1000
     materialUnit = 100
-    materialUnitPrice = 60
+    materialUnitPrice = 50
     soldMaden = 0
     demandRate = 0
     buyMadenPrice = 500
 
+    manufacturedMaden = 0
+    lastManufacturedCount = 0
+    lastManufacturedRate = 0
+    lastManufacturedTime = Date.now()
+
     miningMaden = () => {
         this.currentMaden++
+        this.manufacturedMaden++
         this.material -= this.materialUnit
     }
 
     update = () => {
+        // Update manufactured rate
+        if ( Date.now() - this.lastManufacturedTime > 5000){
+            this.lastManufacturedTime = Date.now()
+            this.lastManufacturedRate = Math.floor(
+                (this.manufacturedMaden - this.lastManufacturedCount) / 5
+            )
+            this.lastManufacturedCount = this.manufacturedMaden
+        }
+
+        // Update demand
         this.updateDemand()
-        if (this.currentMaden > 0 && Math.random() * 500 < this.demandRate){
+
+        // Consumers purchase Madens
+        if (this.currentMaden > 0 && Math.random() * 400 < this.demandRate){
             this.purchaseMaden()
         }
     }

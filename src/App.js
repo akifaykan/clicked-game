@@ -71,7 +71,7 @@ class App extends React.Component {
                             <tbody>
                             <tr>
                                 <td>Maden / Sn</td>
-                                <td>-</td>
+                                <td>{this.game.lastManufacturedRate}</td>
                             </tr>
                             <tr>
                                 <td>Kazma</td>
