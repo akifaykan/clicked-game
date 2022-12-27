@@ -12,7 +12,7 @@ class App extends React.Component {
         setInterval(()=>{
             this.game.update()
             this.setState({})
-        }, 40)
+        }, 100)
     }
 
     update = () => {
@@ -47,11 +47,21 @@ class App extends React.Component {
                             </tr>
                             <tr>
                                 <td>Maden Fiyatı</td>
-                                <td>{this.game.money}₺</td>
+                                <td className="flexible">
+                                    <div>{this.game.madenPrice}₺</div>
+                                    <div>
+                                        <button
+                                            onClick={this.game.increasePrice}>+</button>
+                                        <button
+                                            style={{marginLeft:10}}
+                                            disabled={!this.game.canDecreasePrice()}
+                                            onClick={this.game.decreasePrice}>-</button>
+                                    </div>
+                                </td>
                             </tr>
                             <tr>
                                 <td>Halkın Talebi</td>
-                                <td>%{this.game.money}</td>
+                                <td>%{this.game.demandRate}</td>
                             </tr>
                             </tbody>
                         </table>
@@ -65,19 +75,15 @@ class App extends React.Component {
                             </tr>
                             <tr>
                                 <td>Kazma</td>
-                                <td className="flexible">{this.game.material} adet
-                                    <button
-                                        disabled={!this.game.canBuyMaden()}
-                                        onClick={this.game.buyMaden}>Al</button>
+                                <td className="flexible">
+                                    <div>{this.game.material} adet</div>
+                                    <div>
+                                        <button
+                                            disabled={!this.game.canBuyMaden()}
+                                            onClick={this.game.buyMaden}>Al</button>
+                                        <p>({this.game.materialUnitPrice}₺ / {this.game.buyMadenPrice} adet)</p>
+                                    </div>
                                 </td>
-                            </tr>
-                            <tr>
-                                <td>Maden Fiyatı</td>
-                                <td>{this.game.money}₺</td>
-                            </tr>
-                            <tr>
-                                <td>Halkın Talebi</td>
-                                <td>%{this.game.money}</td>
                             </tr>
                             </tbody>
                         </table>

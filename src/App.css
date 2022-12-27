@@ -39,7 +39,9 @@ button:disabled {
   border-color: transparent;
   cursor: auto;
 }
-
+.flexible button {
+  padding: .2rem .7rem;
+}
 .action button {
   margin-top: 1rem;
 }
@@ -78,4 +80,9 @@ td.flexible {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+.flexible p{
+  margin-top: .5rem;
+  font-size: .85rem;
+  color: #71798d;
 }
