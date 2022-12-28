@@ -24,18 +24,18 @@ class Game {
     autoGenerators = {
         errand: 0,
         errandCost: 100,
-        errandManufactureRate: 2,
+        errandManufactureRate: 1,
         journey: 0,
-        journeyCost: 500,
+        journeyCost: 1000,
         journeyManufactureRate: 4,
         master: 0,
-        masterCost: 1000,
-        masterManufactureRate: 6,
+        masterCost: 2000,
+        masterManufactureRate: 8,
     }
 
     // Auto buyer
     hasAutoBuyer = false
-    autoBuyerCost = 100
+    autoBuyerCost = 1000
     autoBuyerLimit = 60
 
     miningMaden = (count = 1) => {
@@ -48,7 +48,7 @@ class Game {
 
     update = () => {
         // Auto Generators new goods
-        if ( Date.now() - this.autoGeneratorsLastGeneratedAt > 2000 ){
+        if ( Date.now() - this.autoGeneratorsLastGeneratedAt > 1000 ){
             this.miningMaden(
                 this.autoGenerators.errand * this.autoGenerators.errandManufactureRate
             )
@@ -89,7 +89,7 @@ class Game {
         this.updateDemand()
 
         // Consumers purchase Madens
-        if (this.currentMaden > 0 && Math.random() * 500 < this.demandRate){
+        if (this.currentMaden > 0 && Math.random() * 300 < this.demandRate){
             this.purchaseMaden()
         }
     }
@@ -174,7 +174,7 @@ class Game {
     }
 
     canBuyAutoBuyer = () => {
-        return this.manufacturedMaden >= 10
+        return this.manufacturedMaden >= 1000
     }
 
     buyAutoBuyer = () => {
