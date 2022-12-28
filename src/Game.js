@@ -1,26 +1,81 @@
 class Game {
     money = 0
-    madenPrice = 15
+    madenPrice = 25
     currentMaden = 0
-    material = 1000
-    materialUnit = 100
-    materialUnitPrice = 50
-    soldMaden = 0
-    demandRate = 0
-    buyMadenPrice = 500
+    buyMadenPrice = 400
 
+    // Demand rate
+    demandRate = 0
+
+    // Manufacture rate
     manufacturedMaden = 0
     lastManufacturedCount = 0
     lastManufacturedRate = 0
     lastManufacturedTime = Date.now()
 
-    miningMaden = () => {
-        this.currentMaden++
-        this.manufacturedMaden++
-        this.material -= this.materialUnit
+    // Price of the meterial
+    material = 1000
+    materialUnit = 100
+    materialUnitPrice = 60
+    materialLastUpdated = Date.now()
+
+    // Auto Generators
+    autoGeneratorsLastGeneratedAt = Date.now()
+    autoGenerators = {
+        errand: 0,
+        errandCost: 100,
+        errandManufactureRate: 2,
+        journey: 0,
+        journeyCost: 500,
+        journeyManufactureRate: 4,
+        master: 0,
+        masterCost: 1000,
+        masterManufactureRate: 6,
+    }
+
+    // Auto buyer
+    hasAutoBuyer = false
+    autoBuyerCost = 100
+    autoBuyerLimit = 60
+
+    miningMaden = (count = 1) => {
+        if ( this.canMiningMaden(count) ){
+            this.currentMaden += count
+            this.manufacturedMaden += count
+            this.material -= this.materialUnit * count
+        }
     }
 
     update = () => {
+        // Auto Generators new goods
+        if ( Date.now() - this.autoGeneratorsLastGeneratedAt > 2000 ){
+            this.miningMaden(
+                this.autoGenerators.errand * this.autoGenerators.errandManufactureRate
+            )
+            this.miningMaden(
+                this.autoGenerators.journey * this.autoGenerators.journeyManufactureRate
+            )
+            this.miningMaden(
+                this.autoGenerators.master * this.autoGenerators.masterManufactureRate
+            )
+            this.autoGeneratorsLastGeneratedAt = Date.now()
+        }
+
+        // Auto buyer
+        if ( this.hasAutoBuyer &&
+            //this.material < 1000 &&
+            this.canBuyMaden() &&
+            this.materialUnitPrice <= this.autoBuyerLimit
+        ){
+            this.buyMaden()
+        }
+
+        // Update material cost
+        if ( Date.now() - this.materialLastUpdated > 10000 ){
+            this.materialUnitPrice = Math.floor(Math.random() * 20 + 60) // 60 -> 80
+            this.materialLastUpdated = Date.now()
+        }
+
         // Update manufactured rate
         if ( Date.now() - this.lastManufacturedTime > 5000){
             this.lastManufacturedTime = Date.now()
@@ -34,7 +89,7 @@ class Game {
         this.updateDemand()
 
         // Consumers purchase Madens
-        if (this.currentMaden > 0 && Math.random() * 400 < this.demandRate){
+        if (this.currentMaden > 0 && Math.random() * 500 < this.demandRate){
             this.purchaseMaden()
         }
     }
@@ -53,11 +108,14 @@ class Game {
         return this.money >= this.materialUnitPrice
     }
 
-    canMiningMaden = () => {
-        return this.material >= this.materialUnit
+    canMiningMaden = (count = 1) => {
+        return this.material >= this.materialUnit * count
     }
 
     buyMaden = () => {
+        this.materialUnitPrice += Math.floor(Math.random() * 3 + 3)
+        this.materialLastUpdated = Date.now()
+
         this.material += this.buyMadenPrice
         this.money -= this.materialUnitPrice
     }
@@ -65,12 +123,67 @@ class Game {
     increasePrice = () => {
         this.madenPrice += 1
     }
+
     decreasePrice = () => {
         this.madenPrice -= 1
     }
 
     canDecreasePrice = () => {
         return this.madenPrice > 1
+    }
+
+    canBuyAutoGenerator = type => {
+        switch (type) {
+            case "ERRAND" :
+                return this.money >= this.autoGenerators.errandCost
+            case "JOURNEY" :
+                return this.money >= this.autoGenerators.journeyCost
+            case "MASTER" :
+                return this.money >= this.autoGenerators.masterCost
+            default:
+                return false
+        }
+    }
+
+    buyAutoGenerator = type => {
+        switch (type) {
+            case "ERRAND" :
+                this.autoGenerators.errand++
+                this.money -= this.autoGenerators.errandCost
+                this.autoGenerators.errandCost += Math.floor(
+                    (this.autoGenerators.errandCost / 100) * 50 // %50
+                )
+                return
+            case "JOURNEY" :
+                this.autoGenerators.journey++
+                this.money -= this.autoGenerators.journeyCost
+                this.autoGenerators.journeyCost += Math.floor(
+                    (this.autoGenerators.journeyCost / 100) * 50
+                )
+                return
+            case "MASTER" :
+                this.autoGenerators.master++
+                this.money -= this.autoGenerators.masterCost
+                this.autoGenerators.masterCost += Math.floor(
+                    (this.autoGenerators.masterCost / 100) * 50
+                )
+                return
+            default:
+                return false
+        }
+    }
+
+    canBuyAutoBuyer = () => {
+        return this.manufacturedMaden >= 10
+    }
+
+    buyAutoBuyer = () => {
+        this.money -= this.autoBuyerCost
+        this.hasAutoBuyer = true
+    }
+
+    autoBuyerInputPriceChange = e => {
+        this.autoBuyerLimit = e.target.value
     }
 }
 

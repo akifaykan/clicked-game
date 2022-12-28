@@ -5,6 +5,7 @@
   padding: 0;
   box-sizing: border-box;
   font-family: 'Quicksand', sans-serif;
+  outline: none;
 }
 
 #root {
@@ -76,7 +77,7 @@ thead {
   background-color: #1f2228;
   color: #eee;
 }
-td.flexible {
+.flexible {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -85,4 +86,10 @@ td.flexible {
   margin-top: .5rem;
   font-size: .85rem;
   color: #71798d;
+}
+
+input[type="number"]{
+  font-size: 1rem;
+  font-weight: bold;
+  max-width: 80px;
 }

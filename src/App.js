@@ -27,10 +27,10 @@ class App extends React.Component {
                 </header>
                 <main>
                     <div className="action">
-                        <div>Maden : {this.game.currentMaden}</div>
+                        <div>Maden : {this.game.manufacturedMaden}</div>
                         <button
                             disabled={!this.game.canMiningMaden()}
-                            onClick={this.game.miningMaden}>Maden Kaz</button>
+                            onClick={() => this.game.miningMaden()}>Maden Kaz</button>
                     </div>
 
                     <div className="business">
@@ -69,22 +69,102 @@ class App extends React.Component {
                         <h3>Üretim</h3>
                         <table>
                             <tbody>
-                            <tr>
-                                <td>Maden / Sn</td>
-                                <td>{this.game.lastManufacturedRate}</td>
-                            </tr>
-                            <tr>
-                                <td>Kazma</td>
-                                <td className="flexible">
-                                    <div>{this.game.material} adet</div>
-                                    <div>
-                                        <button
-                                            disabled={!this.game.canBuyMaden()}
-                                            onClick={this.game.buyMaden}>Al</button>
-                                        <p>({this.game.materialUnitPrice}₺ / {this.game.buyMadenPrice} adet)</p>
-                                    </div>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td>Maden / Sn</td>
+                                    <td>{this.game.lastManufacturedRate}</td>
+                                </tr>
+                                <tr>
+                                    <td>Kazma</td>
+                                    <td className="flexible">
+                                        <div>{this.game.material} adet</div>
+                                        <div>
+                                            <button
+                                                disabled={!this.game.canBuyMaden()}
+                                                onClick={this.game.buyMaden}>Al</button>
+                                            <p>({this.game.materialUnitPrice}₺ / {this.game.buyMadenPrice} adet)</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {this.game.canBuyAutoBuyer() && (
+                                    <tr>
+                                        <td>Satın alımcı</td>
+                                        <td className="flexible">
+                                            <div>{this.game.hasAutoBuyer ? "Aktif" : "Pasif"}</div>
+                                            {!this.game.hasAutoBuyer && (
+                                                <div>
+                                                    <button
+                                                        disabled={!this.game.canBuyAutoBuyer()}
+                                                        onClick={this.game.buyAutoBuyer}>
+                                                        Al ({this.game.autoBuyerCost}₺)
+                                                    </button>
+                                                </div>
+                                            )}
+                                            {this.game.hasAutoBuyer && (
+                                                <div style={{display:"flex", alignItems: "center"}}>
+                                                    <p style={{marginTop:0, marginRight:10}}>Limit:</p>
+                                                    <input
+                                                        type="number"
+                                                        value={this.game.autoBuyerLimit}
+                                                        onChange={this.game.autoBuyerInputPriceChange}
+                                                    />
+                                                </div>
+                                            )}
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+
+                        <h3>Çalışanlar</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Seviye</th>
+                                    <th>Çalışan sayısı</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Çırak</td>
+                                    <td className="flexible">
+                                        <div>{this.game.autoGenerators.errand}</div>
+                                        <div>
+                                            <button
+                                                disabled={!this.game.canBuyAutoGenerator('ERRAND')}
+                                                onClick={() => this.game.buyAutoGenerator('ERRAND')}>
+                                                Al ({this.game.autoGenerators.errandCost}₺)
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>Kalfa</td>
+                                    <td className="flexible">
+                                        <div>{this.game.autoGenerators.journey}</div>
+                                        <div>
+                                            <button
+                                                disabled={!this.game.canBuyAutoGenerator('JOURNEY')}
+                                                onClick={() => this.game.buyAutoGenerator('JOURNEY')}>
+                                                Al ({this.game.autoGenerators.journeyCost}₺)
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>Usta</td>
+                                    <td className="flexible">
+                                        <div>{this.game.autoGenerators.master}</div>
+                                        <div>
+                                            <button
+                                                disabled={!this.game.canBuyAutoGenerator('MASTER')}
+                                                onClick={() => this.game.buyAutoGenerator('MASTER')}>
+                                                Al ({this.game.autoGenerators.masterCost}₺)
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
