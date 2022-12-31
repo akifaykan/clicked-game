@@ -33,13 +33,16 @@ header h1{
 button{
   padding: .5rem 1.5rem;
   border: 1px solid #eee;
+  background-color: #eee;
   border-radius: 3px;
   font-weight: bold;
   font-size: 1.2rem;
   cursor: pointer;
+  user-select: none;
 }
 button:disabled {
   border-color: transparent;
+  background-color: #9d9d9d;
   cursor: auto;
 }
 .flexible button {

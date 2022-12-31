@@ -48,7 +48,7 @@ class Game {
 
     update = () => {
         // Auto Generators new goods
-        if ( Date.now() - this.autoGeneratorsLastGeneratedAt > 1500 ){
+        if ( Date.now() - this.autoGeneratorsLastGeneratedAt > 2000 ){
             this.miningMaden(
                 this.autoGenerators.errand * this.autoGenerators.errandManufactureRate
             )
@@ -89,7 +89,7 @@ class Game {
         this.updateDemand()
 
         // Consumers purchase Madens
-        if (this.currentMaden > 0 && Math.random() * 500 < this.demandRate){
+        if (this.currentMaden > 0 && Math.random() * 400 < this.demandRate){
             this.purchaseMaden()
         }
     }
