@@ -23,7 +23,7 @@ class Game {
     autoGeneratorsLastGeneratedAt = Date.now()
     autoGenerators = {
         errand: 0,
-        errandCost: 100,
+        errandCost: 300,
         errandManufactureRate: 1,
         journey: 0,
         journeyCost: 1000,
