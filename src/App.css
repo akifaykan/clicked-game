@@ -10,7 +10,7 @@
 
 body {
   background-color: #282c34;
-  font-size: calc(7px + 1vmin);
+  font-size: calc(12px + 1.5vmin);
   padding: 1rem;
   color: white;
 }
@@ -31,11 +31,11 @@ header h1{
   margin-bottom: 1rem;
 }
 button{
-  padding: .3rem 1rem;
+  padding: .5rem 1.5rem;
   border: 1px solid #eee;
   border-radius: 3px;
   font-weight: bold;
-  font-size: 1rem;
+  font-size: 1.2rem;
   cursor: pointer;
 }
 button:disabled {
@@ -43,7 +43,7 @@ button:disabled {
   cursor: auto;
 }
 .flexible button {
-  padding: .2rem .7rem;
+  padding: .3rem .8rem;
 }
 .action button {
   margin-top: 1rem;
@@ -85,8 +85,8 @@ thead {
   justify-content: space-between;
 }
 .flexible p{
-  margin-top: .5rem;
-  font-size: .85rem;
+  margin-bottom: .5rem;
+  font-size: 1.2rem;
   color: #71798d;
 }
 

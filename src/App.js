@@ -51,11 +51,11 @@ class App extends React.Component {
                                     <div>{this.game.madenPrice}₺</div>
                                     <div>
                                         <button
-                                            onClick={this.game.increasePrice}>+</button>
-                                        <button
-                                            style={{marginLeft:10}}
                                             disabled={!this.game.canDecreasePrice()}
                                             onClick={this.game.decreasePrice}>-</button>
+                                        <button
+                                            style={{marginLeft:10}}
+                                            onClick={this.game.increasePrice}>+</button>
                                     </div>
                                 </td>
                             </tr>
@@ -77,41 +77,39 @@ class App extends React.Component {
                                     <td>Kazma</td>
                                     <td className="flexible">
                                         <div>{this.game.material} adet</div>
-                                        <div>
-                                            <button
-                                                disabled={!this.game.canBuyMaden()}
-                                                onClick={this.game.buyMaden}>Al</button>
+                                        <div style={{textAlign:"right"}}>
                                             <p>({this.game.materialUnitPrice}₺ / {this.game.buyMadenPrice} adet)</p>
+                                            <button
+                                                disabled={!this.game.canBuyMaterial()}
+                                                onClick={this.game.buyMaterial}>Al</button>
                                         </div>
                                     </td>
                                 </tr>
-                                {this.game.canBuyAutoBuyer() && (
-                                    <tr>
-                                        <td>Satın alımcı</td>
-                                        <td className="flexible">
-                                            <div>{this.game.hasAutoBuyer ? "Aktif" : "Pasif"}</div>
-                                            {!this.game.hasAutoBuyer && (
-                                                <div>
-                                                    <button
-                                                        disabled={!this.game.canBuyAutoBuyer()}
-                                                        onClick={this.game.buyAutoBuyer}>
-                                                        Al ({this.game.autoBuyerCost}₺)
-                                                    </button>
-                                                </div>
-                                            )}
-                                            {this.game.hasAutoBuyer && (
-                                                <div style={{display:"flex", alignItems: "center"}}>
-                                                    <p style={{marginTop:0, marginRight:10}}>Limit:</p>
-                                                    <input
-                                                        type="number"
-                                                        value={this.game.autoBuyerLimit}
-                                                        onChange={this.game.autoBuyerInputPriceChange}
-                                                    />
-                                                </div>
-                                            )}
-                                        </td>
-                                    </tr>
-                                )}
+                                <tr>
+                                    <td>Satın alımcı</td>
+                                    <td className="flexible">
+                                        <div>{this.game.hasAutoBuyer ? "Aktif" : "Pasif"}</div>
+                                        {this.game.unlockBuyAutoBuyer() && !this.game.hasAutoBuyer && (
+                                            <div>
+                                                <button
+                                                    disabled={!this.game.canBuyAutoBuyer()}
+                                                    onClick={this.game.buyAutoBuyer}>
+                                                    Al ({this.game.autoBuyerCost}₺)
+                                                </button>
+                                            </div>
+                                        )}
+                                        {this.game.hasAutoBuyer && (
+                                            <div style={{display:"flex", alignItems: "center"}}>
+                                                <p style={{marginBottom:0, marginRight:10}}>Limit:</p>
+                                                <input
+                                                    type="number"
+                                                    value={this.game.autoBuyerLimit}
+                                                    onChange={this.game.autoBuyerInputPriceChange}
+                                                />
+                                            </div>
+                                        )}
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
 

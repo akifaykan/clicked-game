@@ -1,6 +1,6 @@
 class Game {
     money = 0
-    madenPrice = 25
+    madenPrice = 40
     currentMaden = 0
     buyMadenPrice = 400
 
@@ -48,7 +48,7 @@ class Game {
 
     update = () => {
         // Auto Generators new goods
-        if ( Date.now() - this.autoGeneratorsLastGeneratedAt > 1000 ){
+        if ( Date.now() - this.autoGeneratorsLastGeneratedAt > 1500 ){
             this.miningMaden(
                 this.autoGenerators.errand * this.autoGenerators.errandManufactureRate
             )
@@ -64,14 +64,14 @@ class Game {
         // Auto buyer
         if ( this.hasAutoBuyer &&
             //this.material < 1000 &&
-            this.canBuyMaden() &&
+            this.canBuyMaterial() &&
             this.materialUnitPrice <= this.autoBuyerLimit
         ){
-            this.buyMaden()
+            this.buyMaterial()
         }
 
         // Update material cost
-        if ( Date.now() - this.materialLastUpdated > 10000 ){
+        if ( Date.now() - this.materialLastUpdated > 5000 ){
             this.materialUnitPrice = Math.floor(Math.random() * 20 + 60) // 60 -> 80
             this.materialLastUpdated = Date.now()
         }
@@ -89,14 +89,26 @@ class Game {
         this.updateDemand()
 
         // Consumers purchase Madens
-        if (this.currentMaden > 0 && Math.random() * 300 < this.demandRate){
+        if (this.currentMaden > 0 && Math.random() * 500 < this.demandRate){
             this.purchaseMaden()
         }
     }
 
     updateDemand = () => {
-        const rate = 100 - (this.madenPrice / 30) * 100
-        this.demandRate = Math.floor(Math.min( Math.max(0, rate), 100 ))
+        let rate
+
+        if ( this.madenPrice <= 29 ){
+            rate = (2 / Math.sqrt(this.madenPrice)) * 140
+        } else {
+            const maxRate = (2 / Math.sqrt(30)) * 100
+
+            rate = (maxRate * (40 - this.madenPrice)) / 30
+        }
+
+        this.demandRate = Math.floor(Math.max(0, rate))
+
+        //const rate = 100 - (this.madenPrice / 40) * 100
+        //this.demandRate = Math.floor(Math.min( Math.max(0, rate), 100 ))
     }
 
     purchaseMaden = () => {
@@ -104,15 +116,19 @@ class Game {
         this.money += this.madenPrice
     }
 
-    canBuyMaden = () => {
-        return this.money >= this.materialUnitPrice
-    }
-
     canMiningMaden = (count = 1) => {
         return this.material >= this.materialUnit * count
     }
 
-    buyMaden = () => {
+    canBuyMaterial = () => {
+        return this.money >= this.materialUnitPrice
+    }
+
+    buyMaterial = () => {
+        if (!this.canBuyMaterial()){
+            return
+        }
+
         this.materialUnitPrice += Math.floor(Math.random() * 3 + 3)
         this.materialLastUpdated = Date.now()
 
@@ -125,6 +141,10 @@ class Game {
     }
 
     decreasePrice = () => {
+        if (this.madenPrice === 1){
+            return
+        }
+
         this.madenPrice -= 1
     }
 
@@ -146,26 +166,30 @@ class Game {
     }
 
     buyAutoGenerator = type => {
+        if (!this.canBuyAutoGenerator(type)){
+            return
+        }
+
         switch (type) {
             case "ERRAND" :
                 this.autoGenerators.errand++
                 this.money -= this.autoGenerators.errandCost
                 this.autoGenerators.errandCost += Math.floor(
-                    (this.autoGenerators.errandCost / 100) * 50 // %50
+                    (this.autoGenerators.errandCost / 100) * 70 // %50
                 )
                 return
             case "JOURNEY" :
                 this.autoGenerators.journey++
                 this.money -= this.autoGenerators.journeyCost
                 this.autoGenerators.journeyCost += Math.floor(
-                    (this.autoGenerators.journeyCost / 100) * 50
+                    (this.autoGenerators.journeyCost / 100) * 70
                 )
                 return
             case "MASTER" :
                 this.autoGenerators.master++
                 this.money -= this.autoGenerators.masterCost
                 this.autoGenerators.masterCost += Math.floor(
-                    (this.autoGenerators.masterCost / 100) * 50
+                    (this.autoGenerators.masterCost / 100) * 70
                 )
                 return
             default:
@@ -173,11 +197,19 @@ class Game {
         }
     }
 
-    canBuyAutoBuyer = () => {
+    unlockBuyAutoBuyer = () => {
         return this.manufacturedMaden >= 1000
     }
 
+    canBuyAutoBuyer = () => {
+        return this.unlockBuyAutoBuyer() && this.money >= this.autoBuyerCost
+    }
+
     buyAutoBuyer = () => {
+        if (!this.canBuyAutoBuyer()){
+            return
+        }
+
         this.money -= this.autoBuyerCost
         this.hasAutoBuyer = true
     }
